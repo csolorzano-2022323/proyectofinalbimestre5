@@ -35,8 +35,8 @@ void setup() {
  r2 = 10000; // R2 = 10KΩ
 }
 
-void loop() {
-
+void loop() 
+{
   // sensor de voltaje
   sensorvalue= analogRead(sensor); //Realiza la lectura
   V= fmap(sensorvalue,0,1023,0.0,25.0); // cambia a 0.0 - 25
@@ -68,10 +68,35 @@ void loop() {
   Serial.println();
   Serial.print("Valor aproximado de R1 = ");
   Serial.println(R1);
-  delay(3000);
+  delay(1000);
+ 
+  //Mientras tenga caracteres disponibles para leer en los pines de comunicacion serial
+  while(Serial.available()>0)
+  {
+    //Guardo el caracter recibido por medio de la comunicacion serial
+    char caracter_recibido = Serial.read();
+
+    if(caracter_recibido == 'V')
+    {
+      Serial.print("Voltaje = ");
+      Serial.println(V); // imprime la variable      
+     }
+    else if(caracter_recibido == 'A')
+    {
+     printm("intensidad", current, "A ,");
+     printm("Potencia", power, "W");   
+     }
+
+    else if(caracter_recibido == 'R')
+    {
+      Serial.println();
+      Serial.print("Valor aproximado de R1 = ");
+      Serial.println(R1);     
+      }
+    }
 }
 
-//Sensor de voltaje 
+//Sensor de voltaje                              
 // Cambio de escala para dar lectura mas precisa 
 float fmap(float x, float in_min, float in_max, float out_min, float out_max)
 {
@@ -84,7 +109,7 @@ float fmap(float x, float in_min, float in_max, float out_min, float out_max)
 void printm( String prefix, float value1, String postfix)
 {
   Serial.print(prefix);
-  Serial.print(value1, 3);
+   Serial.print(value1, 3);
   Serial.print(postfix);
   
 }
@@ -100,19 +125,3 @@ float getCorriente(int SN){
   }
   return(corriente / SN);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
